@@ -504,3 +504,66 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(element);
   });
 });
+// Add this to your animations.js file
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Image reveal effect for profile photo
+  const profileImage = document.querySelector('.about-image');
+  const aboutSection = document.getElementById('about');
+
+  if (profileImage && aboutSection) {
+    // Create wrapper for the effect
+    const imageWrapper = document.createElement('div');
+    imageWrapper.classList.add('image-effect-wrapper');
+
+    // Set initial styles for the wrapper
+    imageWrapper.style.position = 'relative';
+    imageWrapper.style.overflow = 'hidden';
+    imageWrapper.style.width = '100%';
+    imageWrapper.style.height = '100%';
+
+    // Move the image into the wrapper
+    profileImage.parentNode.insertBefore(imageWrapper, profileImage);
+    imageWrapper.appendChild(profileImage);
+
+    // Create the overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('image-reveal-overlay');
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.transformOrigin = 'left';
+    overlay.style.zIndex = '1';
+    imageWrapper.appendChild(overlay);
+
+    // Set initial image styles
+    profileImage.style.transform = 'scale(1.1)';
+    profileImage.style.transition = 'transform 1.5s ease-out';
+    profileImage.style.filter = 'grayscale(80%)';
+
+    // Create the intersection observer
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Animate the overlay
+          overlay.style.transition = 'transform 1.2s cubic-bezier(0.77, 0, 0.175, 1)';
+          overlay.style.transform = 'scaleX(0)';
+
+          // Animate the image
+          setTimeout(() => {
+            profileImage.style.transform = 'scale(1)';
+            profileImage.style.filter = 'grayscale(0%)';
+          }, 300);
+
+          // Stop observing after animation
+          imageObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    // Start observing the image wrapper
+    imageObserver.observe(imageWrapper);
+  }
+});

@@ -5,28 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!heroSection) return;
 
-  // Create canvas element
-  const canvas = document.createElement('canvas');
-  canvas.classList.add('galaxy-canvas');
-
-  // Set canvas styles
-  canvas.style.position = 'absolute';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.zIndex = '0';
-
-  // Insert canvas as the first child of hero section
-  heroSection.insertBefore(canvas, heroSection.firstChild);
-
-  // Make hero container position relative and increase z-index
-  const heroContainer = heroSection.querySelector('.hero-container');
-  if (heroContainer) {
-    heroContainer.style.position = 'relative';
-    heroContainer.style.zIndex = '1';
-  }
-
   // Detect device capabilities for responsive settings
   const deviceDetection = {
     isMobile: false,
@@ -62,6 +40,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return this;
     }
   }.detect();
+
+  // *** NEW CODE: Exit early if on mobile device ***
+  if (deviceDetection.isMobile) {
+    // Optional: Set a simple background for mobile
+    heroSection.style.backgroundColor = '#000000';
+    return;
+  }
+
+  // Create canvas element
+  const canvas = document.createElement('canvas');
+  canvas.classList.add('galaxy-canvas');
+
+  // Set canvas styles
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.zIndex = '0';
+
+  // Insert canvas as the first child of hero section
+  heroSection.insertBefore(canvas, heroSection.firstChild);
+
+  // Make hero container position relative and increase z-index
+  const heroContainer = heroSection.querySelector('.hero-container');
+  if (heroContainer) {
+    heroContainer.style.position = 'relative';
+    heroContainer.style.zIndex = '1';
+  }
 
   // Enhanced 3D Galaxy settings with mobile responsiveness
   const GALAXY = {
