@@ -419,3 +419,88 @@ document.addEventListener('DOMContentLoaded', () => {
   // También optimizar cuando cambie el tamaño
   window.addEventListener('resize', optimizeImagesForMobile);
 });
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Specific adjustments for laptop displays (above 1024px)
+  const optimizeForLaptop = () => {
+    const isLaptop = window.innerWidth > 1024;
+    const isWideScreen = window.innerWidth >= 1440;
+
+    if (isLaptop) {
+      // Adjust hero text animation speed for laptop screens
+      if (window.animationSpeeds) {
+        window.animationSpeeds.charSpeed = isWideScreen ? 90 : 85;
+        window.animationSpeeds.wordPause = isWideScreen ? 120 : 110;
+      }
+
+      // Enhance scrolling smoothness on larger displays
+      document.documentElement.style.scrollBehavior = 'smooth';
+
+      // Set header threshold based on screen size
+      scrollThreshold = isWideScreen ? 150 : 120;
+
+      // Make sure images scale properly on larger screens
+      const aboutImage = document.querySelector('.about-image');
+      if (aboutImage) {
+        aboutImage.style.maxHeight = isWideScreen ? '700px' : '650px';
+        aboutImage.style.objectFit = 'cover';
+      }
+
+      // Adjust container padding based on width for better proportions
+      const containers = document.querySelectorAll('.container');
+      containers.forEach(container => {
+        if (isWideScreen) {
+          container.style.padding = '0 50px';
+        } else {
+          container.style.padding = '0 40px';
+        }
+      });
+    }
+  };
+
+  // Run initially and on resize
+  optimizeForLaptop();
+  window.addEventListener('resize', optimizeForLaptop);
+
+  // Fix for section animations on laptop screens
+  const fadeInElements = document.querySelectorAll('.about-grid, .skills-grid, .experience-container, .education-container');
+
+  // Enhanced intersection observer for smoother animations on larger screens
+  const observerOptions = {
+    threshold: 0.15,
+    rootMargin: "0px 0px -120px 0px"
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Start with more opacity on larger screens for smoother fade-in
+        if (window.innerWidth > 1024) {
+          entry.target.style.opacity = 0.1;
+        } else {
+          entry.target.style.opacity = 0;
+        }
+
+        // Apply transition with delay based on screen size
+        const delay = window.innerWidth > 1440 ? '0.2s' : '0.1s';
+        entry.target.style.transition = `opacity 0.8s ease-out ${delay}, transform 0.8s ease-out ${delay}`;
+
+        // Trigger animation
+        setTimeout(() => {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }, 100);
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  fadeInElements.forEach(element => {
+    element.style.opacity = 0;
+    element.style.transform = 'translateY(20px)';
+    observer.observe(element);
+  });
+});
