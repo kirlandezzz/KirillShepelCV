@@ -31,7 +31,6 @@ body {
   background-color: var(--color-background);
   overflow-x: hidden;
 }
-
 a {
   text-decoration: none;
   color: var(--color-text);
@@ -138,6 +137,8 @@ strong {
 .menu-open .menu-line:last-child {
   transform: translateY(-9px) rotate(-45deg);
 }
+
+
 
 /* Hero Section */
 .hero {
@@ -249,6 +250,8 @@ strong {
 .experience-description {
   font-size: 16px;
 }
+
+
 
 /* Education */
 .education-list {
@@ -364,7 +367,7 @@ strong {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .nav {
     position: fixed;
     top: 0;
@@ -410,6 +413,17 @@ strong {
   .archive-grid {
     grid-template-columns: 1fr;
   }
+}
+body.menu-open::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 1);
+  z-index: 999; /* Justo por debajo del menú */
+  pointer-events: none; /* Permite interactuar con elementos debajo */
 }
 
 @media (prefers-color-scheme: dark) {

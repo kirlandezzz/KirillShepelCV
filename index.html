@@ -31,7 +31,7 @@
 <!-- Hero Section -->
 <section class="hero">
   <div class="container hero-container">
-    <h1 class="hero-title">Programador Full Stack especializado en desarrollo web y multiplataforma.</h1>
+    <h1 class="hero-title">Hola soy Kirill, programador Full Stack especializado en desarrollo web y multiplataforma.</h1>
   </div>
 </section>
 
@@ -41,12 +41,12 @@
     <h2 class="section-title">Sobre mí</h2>
     <div class="about-grid">
       <div class="about-image-container">
-        <img src="img/KirillAbout.jpeg" alt="Kirill Shepel" class="about-image">
+        <img src="img/KirillAbout.jpeg" alt="Kirill Shepel" class="about-image" loading="lazy">
       </div>
       <div class="about-content">
         <div class="about-text">
-          <p class="about-description">Programador Full Stack con experiencia en tecnologías web y multiplataforma. Actualmente finalizo el Grado Superior en Desarrollo de Aplicaciones Multiplataforma en CIFP César Manrique mientras realizo prácticas como programador en CIAC S.L.</p>
-          <p class="about-description">Domino diferentes lenguajes y frameworks: HTML5/CSS3, JavaScript, Java, .NET, Flutter y Xamarin. Mi formación en ingeniería complementa mis habilidades de programación con un enfoque analítico y resolutivo.</p>
+          <p class="about-description">Programador Full Stack Junior con experiencia en tecnologías web y multiplataforma. Actualmente finalizo el Grado Superior en Desarrollo de Aplicaciones Multiplataforma en CIFP César Manrique mientras realizo prácticas como programador en CIAC S.L.</p>
+          <p class="about-description">Domino diferentes lenguajes y frameworks: HTML5/CSS3, JavaScript, Java, .NET, Flutter y Xamarin (a medias jaja). Mi formación en ingeniería complementa mis habilidades de programación con un enfoque analítico y resolutivo.</p>
         </div>
 
         <div class="skills-grid">
@@ -118,8 +118,8 @@
         <a href="tel:608127707" class="footer-phone">608 127 707</a>
       </div>
       <div class="footer-links">
-        <a href="#" class="footer-link">LinkedIn</a>
-        <a href="#" class="footer-link">GitHub</a>
+        <a href="https://www.linkedin.com/in/kirillshepel" class="footer-link">LinkedIn</a>
+        <a href="https://github.com/kirlandezzz" class="footer-link">GitHub</a>
         <a href="#" class="footer-link">Descargar CV</a>
       </div>
     </div>
@@ -137,6 +137,23 @@
   // Simple toggle for mobile menu
   document.querySelector('.menu-toggle').addEventListener('click', function() {
     document.body.classList.toggle('menu-open');
+  });
+</script>
+
+<script>
+  // Añade esto justo después de cargar animations.js
+  document.addEventListener('DOMContentLoaded', function() {
+    // Asegurarse de que las imágenes se carguen correctamente
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      if (img.complete) {
+        img.classList.add('loaded');
+      } else {
+        img.addEventListener('load', function() {
+          img.classList.add('loaded');
+        });
+      }
+    });
   });
 </script>
 </body>

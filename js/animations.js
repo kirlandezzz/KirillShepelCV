@@ -96,6 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
         hyphens: none;
         white-space: normal;
       }
+
+      /* Estilos para el header con animación */
+      .header {
+        transition: transform 0.3s ease;
+      }
+
+      .header-hidden {
+        transform: translateY(-100%);
+      }
+
+      .header-visible {
+        transform: translateY(0);
+      }
     `;
     document.head.appendChild(style);
 
@@ -154,28 +167,255 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   }
 
-  // Animación de aparición para las secciones
-  const observerOptions = {
-    threshold: 0.2,
-    rootMargin: "0px 0px -100px 0px"
-  };
+  // Control del header al hacer scroll
+  const header = document.querySelector('.header');
+  const hero = document.querySelector('.hero');
 
-  const fadeInElements = document.querySelectorAll('.about-grid, .skills-grid, .experience-container, .education-container');
+  if (header && hero) {
+    let lastScrollY = window.scrollY;
+    let scrollingDown = true;
+    let headerVisible = true;
+    let pastHero = false;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = 1;
-        entry.target.style.transform = 'translateY(0)';
-        observer.unobserve(entry.target);
+    // Función para actualizar la visibilidad del header
+    const updateHeaderVisibility = () => {
+      const heroBottom = hero.offsetTop + hero.offsetHeight;
+      const currentScrollY = window.scrollY;
+
+      // Determinar dirección de scroll
+      scrollingDown = currentScrollY > lastScrollY;
+
+      // Determinar si hemos pasado el hero
+      pastHero = currentScrollY > heroBottom - 100; // Un poco antes del final para una transición más suave
+
+      // Lógica para mostrar/ocultar el header
+      if (pastHero) {
+        if (scrollingDown && headerVisible) {
+          // Ocultar header al hacer scroll hacia abajo pasado el hero
+          header.classList.add('header-hidden');
+          header.classList.remove('header-visible');
+          headerVisible = false;
+        } else if (!scrollingDown && !headerVisible) {
+          // Mostrar header al hacer scroll hacia arriba
+          header.classList.remove('header-hidden');
+          header.classList.add('header-visible');
+          headerVisible = true;
+        }
+      } else {
+        // Siempre visible en el hero
+        header.classList.remove('header-hidden');
+        header.classList.add('header-visible');
+        headerVisible = true;
+      }
+
+      // Actualizar posición actual
+      lastScrollY = currentScrollY;
+    };
+
+    // Añadir clase inicial
+    header.classList.add('header-visible');
+
+    // Evento scroll con throttling para mejor rendimiento
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeaderVisibility();
+          ticking = false;
+        });
+        ticking = true;
       }
     });
-  }, observerOptions);
+  }
 
-  fadeInElements.forEach(element => {
-    element.style.opacity = 0;
-    element.style.transform = 'translateY(20px)';
-    element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-    observer.observe(element);
+
+// Animación de aparición para las secciones
+const observerOptions = {
+  threshold: 0.2,
+  rootMargin: "0px 0px -100px 0px"
+};
+
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = 0.1;
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    }
   });
+}, observerOptions);
+
+fadeInElements.forEach(element => {
+  element.style.opacity = 0;
+  element.style.transform = 'translateY(20px)';
+  element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+  observer.observe(element);
+});
+});
+
+// Función para ajustar la imagen de perfil
+document.addEventListener('DOMContentLoaded', () => {
+  const adjustProfileImage = () => {
+    const aboutImage = document.querySelector('.about-image');
+    const aboutImageContainer = document.querySelector('.about-image-container');
+
+    if (aboutImage && aboutImageContainer) {
+      // Eliminar estilos inline que puedan estar interfiriendo
+      aboutImage.style.removeProperty('height');
+      aboutImage.style.width = '100%';
+      aboutImage.style.height = 'auto';
+      aboutImage.style.objectFit = 'contain';
+      aboutImage.style.maxWidth = '100%';
+
+      // Asegurar que el contenedor se ajuste al tamaño de la imagen
+      aboutImageContainer.style.height = 'auto';
+      aboutImageContainer.style.maxHeight = 'none';
+      aboutImageContainer.style.overflow = 'visible';
+
+      // Asegurarse de que la imagen se cargue completamente
+      aboutImage.onload = function() {
+        // Actualizar altura del contenedor si es necesario
+        aboutImageContainer.style.height = 'auto';
+      };
+    }
+  };
+
+  // Ejecutar ajuste al cargar la página
+  adjustProfileImage();
+
+  // También ejecutar el ajuste cuando cambie el tamaño de la ventana
+  window.addEventListener('resize', adjustProfileImage);
+});
+
+// Añadir al final de animations.js
+
+// Función para hacer el header más compacto al hacer scroll
+document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.header');
+  let scrollThreshold = 100; // Umbral para activar el header compacto
+
+  // Función para actualizar la clase del header basado en la posición de scroll
+  function updateHeaderCompactness() {
+    if (window.scrollY > scrollThreshold) {
+      header.classList.add('compact');
+    } else {
+      header.classList.remove('compact');
+    }
+  }
+
+  // Verificar el scroll inicial
+  updateHeaderCompactness();
+
+  // Actualizar en scroll con throttling para mejor rendimiento
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateHeaderCompactness();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // Ajustar el tamaño del texto para diferentes dispositivos
+  const adjustTextForDevice = () => {
+    const isMobile = window.innerWidth <= 767;
+    const isTablet = window.innerWidth > 767 && window.innerWidth <= 1024;
+    const isSmallMobile = window.innerWidth <= 480;
+
+    // Ajustar velocidad de la animación de texto en dispositivos móviles
+    if (typeof revealWord === 'function') {
+      // Si estamos en un dispositivo móvil, cambiar la velocidad de animación
+      const charSpeed = isSmallMobile ? 50 : isMobile ? 60 : isTablet ? 70 : 80;
+      const wordPause = isSmallMobile ? 70 : isMobile ? 80 : isTablet ? 90 : 100;
+
+      // Esta modificación asume que tenemos acceso a estas variables,
+      // si no es así, se puede implementar como una actualización al código existente
+      window.animationSpeeds = {
+        charSpeed: charSpeed,
+        wordPause: wordPause
+      };
+    }
+
+    // Ajustar padding de contenedores en dispositivos móviles
+    const containers = document.querySelectorAll('.container');
+    containers.forEach(container => {
+      if (isSmallMobile) {
+        container.style.padding = '0 15px';
+      } else if (isMobile) {
+        container.style.padding = '0 20px';
+      } else {
+        container.style.padding = '0 30px';
+      }
+    });
+  };
+
+  // Ejecutar ajustes de texto inicialmente
+  adjustTextForDevice();
+
+  // Actualizar cuando cambie el tamaño de la ventana
+  window.addEventListener('resize', adjustTextForDevice);
+
+  // Ajuste específico para el menú móvil
+  const menuToggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.nav');
+
+  if (menuToggle && nav) {
+    // Cerrar menú al hacer clic en un enlace (mejorar experiencia móvil)
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        document.body.classList.remove('menu-open');
+      });
+    });
+
+    // Cerrar menú al hacer scroll (mejorar experiencia móvil)
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      // Solo aplicar en móviles
+      if (window.innerWidth <= 767) {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Si hacemos scroll más de 50px, cerrar el menú
+        if (Math.abs(scrollTop - lastScrollTop) > 50) {
+          document.body.classList.remove('menu-open');
+          lastScrollTop = scrollTop;
+        }
+      }
+    });
+  }
+});
+
+// Optimizar la carga de imágenes para mejor rendimiento en móviles
+document.addEventListener('DOMContentLoaded', () => {
+  // Función para optimizar la carga de imágenes para móviles
+  const optimizeImagesForMobile = () => {
+    const isMobile = window.innerWidth <= 767;
+    const images = document.querySelectorAll('img');
+
+    images.forEach(img => {
+      // Solo aplicar a imágenes que no son íconos o logos pequeños
+      if (img.width > 100 || img.height > 100) {
+        if (isMobile) {
+          // Añadir atributo loading=lazy si no lo tiene
+          if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+          }
+
+          // Prioridad para la imagen principal si está en la vista
+          if (img.classList.contains('about-image')) {
+            img.setAttribute('fetchpriority', 'high');
+          }
+        }
+      }
+    });
+  };
+
+  // Ejecutar optimización de imágenes
+  optimizeImagesForMobile();
+
+  // También optimizar cuando cambie el tamaño
+  window.addEventListener('resize', optimizeImagesForMobile);
 });
