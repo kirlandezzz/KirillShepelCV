@@ -151,12 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
           // Programar la adición del siguiente carácter
           setTimeout(() => {
             revealWord(wordIndex, charIndex + 1);
-          }, 80); // Velocidad de la animación (ms entre caracteres)
+          }, 30); // Velocidad de la animación (ms entre caracteres)
         } else {
           // Palabra completa, continuar con la siguiente palabra
           setTimeout(() => {
             revealWord(wordIndex + 1, 0);
-          }, 100); // Pequeña pausa entre palabras
+          }, 50); // Pequeña pausa entre palabras
         }
       }
     };
