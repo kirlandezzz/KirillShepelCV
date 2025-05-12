@@ -6,7 +6,6 @@
   --color-dark: #000000;
   --color-gray: #e0e0e0;
   --color-gray-dark: #505050;
-  --color-accent: #b98d58;
   --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --spacing-unit: 8px;
   --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -158,57 +157,96 @@ strong {
   max-width: 800px;
 }
 
-/* About Section */
+/* About Section - UPDATED */
 .about {
   padding: 150px 0;
   background-color: var(--color-background);
+  position: relative;
+}
+
+/* Elemento decorativo para reemplazar visualmente la imagen */
+.about:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  opacity: 0.1;
+  z-index: 0;
 }
 
 .section-title {
   font-size: 48px;
   margin-bottom: 80px;
   font-weight: 400;
+  position: relative;
+  z-index: 1;
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 60px;
+.about-container {
+  position: relative;
+  z-index: 1;
 }
 
-.about-image-container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.about-image {
-  width: 100%;
-  height: 30%;
-  object-fit: cover;
-}
-
+/* Nueva estructura sin la imagen */
 .about-content {
   display: flex;
   flex-direction: column;
   gap: 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-text {
+  position: relative;
+  padding-left: 25px;
 }
 
 .about-description {
   font-size: 18px;
   line-height: 1.7;
+  margin-bottom: 20px;
 }
 
-/* Skills Grid */
+.about-description:last-child {
+  margin-bottom: 0;
+}
+
+/* Skills Grid - Mejorado */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 40px;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.skill-category {
+  transition: transform 0.3s ease;
+}
+
+.skill-category:hover {
+  transform: translateY(-5px);
 }
 
 .skill-category-title {
   font-size: 20px;
   font-weight: 500;
   margin-bottom: 15px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.skill-category-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
 }
 
 .skill-description {
@@ -223,6 +261,27 @@ strong {
   font-size: 20px;
   font-weight: 500;
   margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.experience-title:after,
+.education-title:after,
+.details-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+}
+
+.experience-container,
+.education-container {
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
 }
 
 .experience-item {
@@ -258,6 +317,18 @@ strong {
 
 .education-item {
   margin-bottom: 10px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.education-item:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 .education-degree {
@@ -340,16 +411,35 @@ strong {
   opacity: 0.7;
 }
 
+/* Helpers for transitions */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header animation for scroll */
+.header.compact {
+  padding: 15px 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-hidden {
+  transform: translateY(-100%);
+}
+
+.header-visible {
+  transform: translateY(0);
+}
+
 /* Media Queries */
 @media (max-width: 1200px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .about-image-container {
-    max-height: 600px;
-  }
-
   .skills-grid {
     grid-template-columns: 1fr;
   }
@@ -358,12 +448,31 @@ strong {
     grid-template-columns: 1fr;
   }
 
-  .archive-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .about:before {
+    width: 40%;
   }
 }
 
 @media (max-width: 1024px) {
+  .section-title {
+    font-size: 40px;
+    margin-bottom: 60px;
+  }
+
+  .about-content {
+    gap: 40px;
+  }
+
+  .skills-grid,
+  .experience-container,
+  .education-container {
+    padding: 30px;
+  }
+
+  .about:before {
+    width: 50%;
+  }
+
   .nav {
     position: fixed;
     top: 0;
@@ -405,11 +514,76 @@ strong {
     flex-direction: column;
     gap: 15px;
   }
+}
 
-  .archive-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 767px) {
+  .about {
+    padding: 100px 0;
+  }
+
+  .section-title {
+    font-size: 32px;
+    margin-bottom: 40px;
+  }
+
+  .about-text {
+    padding-left: 15px;
+  }
+
+  .about-description {
+    font-size: 16px;
+  }
+
+  .skills-grid,
+  .experience-container,
+  .education-container {
+    padding: 20px;
+  }
+
+  .about:before {
+    width: 70%;
+    opacity: 0.08;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .footer {
+    padding: 60px 0;
   }
 }
+
+@media (max-width: 480px) {
+  .about {
+    padding: 80px 0;
+  }
+
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  .experience-role,
+  .education-degree {
+    font-size: 16px;
+  }
+
+  .experience-container,
+  .education-container {
+    padding: 15px;
+  }
+
+  .about:before {
+    width: 100%;
+    opacity: 0.06;
+  }
+}
+
 body.menu-open::before {
   content: '';
   position: fixed;
@@ -423,10 +597,11 @@ body.menu-open::before {
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --color-background: #1a1a1a;
-        --color-text: #f8f8f8;
-        --color-gray: #333333;
-        --color-gray-dark: #aaaaaa;
-    }
+  :root {
+    --color-background: #1a1a1a;
+    --color-text: #f8f8f8;
+    --color-gray: #333333;
+    --color-gray-dark: #aaaaaa;
+  }
+
 }
